@@ -511,16 +511,16 @@ writeheader(FILE *fp, const char *title)
 	if (description[0])
 		fputs(" - ", fp);
 	xmlencode(fp, description, strlen(description));
-	fprintf(fp, "</title>\n<link rel=\"icon\" type=\"image/png\" href=\"%sfavicon.png\" />\n", relpath);
+	fprintf(fp, "</title>\n<link rel=\"icon\" type=\"image/png\" href=\"%sfavicon.png?v=3\" />\n", relpath);
 	fputs("<link rel=\"alternate\" type=\"application/atom+xml\" title=\"", fp);
 	xmlencode(fp, name, strlen(name));
 	fprintf(fp, " Atom Feed\" href=\"%satom.xml\" />\n", relpath);
 	fputs("<link rel=\"alternate\" type=\"application/atom+xml\" title=\"", fp);
 	xmlencode(fp, name, strlen(name));
 	fprintf(fp, " Atom Feed (tags)\" href=\"%stags.xml\" />\n", relpath);
-	fprintf(fp, "<link rel=\"stylesheet\" type=\"text/css\" href=\"%sstyle.css\" />\n", relpath);
+	fprintf(fp, "<link rel=\"stylesheet\" type=\"text/css\" href=\"%sstyle.css?v=3?v=3\" />\n", relpath);
 	fputs("</head>\n<body>\n<table><tr><td>", fp);
-	fprintf(fp, "<a href=\"../%s\"><img src=\"%slogo.png\" alt=\"\" width=\"32\" height=\"32\" /></a>",
+	fprintf(fp, "<a href=\"../%s\"><img src=\"%slogo.png?v=3\" alt=\"\" width=\"32\" height=\"32\" /></a>",
 	        relpath, relpath);
 	fputs("</td><td><h1>", fp);
 	xmlencode(fp, strippedname, strlen(strippedname));
@@ -528,11 +528,9 @@ writeheader(FILE *fp, const char *title)
 	xmlencode(fp, description, strlen(description));
 	fputs("</span></td></tr>", fp);
 	if (cloneurl[0]) {
-		fputs("<tr class=\"url\"><td></td><td>git clone <a href=\"", fp);
-		xmlencode(fp, cloneurl, strlen(cloneurl)); /* not percent-encoded */
-		fputs("\">", fp);
+		fputs("<tr class=\"url\"><td></td><td><!--email_off--><code id=\"clone-cmd\">git clone ", fp);
 		xmlencode(fp, cloneurl, strlen(cloneurl));
-		fputs("</a></td></tr>", fp);
+		fputs("</code><!--/email_off--> <button style=\"cursor:pointer; padding: 2px 5px; font-size: 0.8em;\" onclick=\"navigator.clipboard.writeText(document.getElementById('clone-cmd').innerText); var b=this; b.innerText='Copied!'; setTimeout(function(){b.innerText='Copy'}, 2000);\">Copy</button></td></tr>", fp);
 	}
 	fputs("<tr><td></td><td>\n", fp);
 	fprintf(fp, "<a href=\"%slog.html\">Log</a> | ", relpath);
@@ -560,7 +558,7 @@ size_t
 writeblobhtml(FILE *fp, const git_blob *blob)
 {
 	size_t n = 0, i, len, prev;
-	const char *nfmt = "<a href=\"#l%zu\" class=\"line\" id=\"l%zu\">%7zu</a> ";
+	const char *nfmt = "<a href=\"#l%zu\" class=\"line\" id=\"l%zu\">%7zu </a>";
 	const char *s = git_blob_rawcontent(blob);
 
 	len = git_blob_rawsize(blob);
