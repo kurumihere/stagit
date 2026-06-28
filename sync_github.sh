@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+export PATH="/usr/local/bin:$PATH"
 
 GITHUB_USER="kurumihere"
 WEB_DIR="/var/www/code.kurumi.world"
@@ -19,7 +20,7 @@ for REPO in $REPOS; do
     if [ -d "$REPO.git" ]; then
         echo "Updating $REPO.git..."
         cd "$REPO.git"
-        git fetch --all
+        git fetch origin "+refs/heads/*:refs/heads/*" --prune
         cd ..
     else
         echo "Cloning $REPO..."
